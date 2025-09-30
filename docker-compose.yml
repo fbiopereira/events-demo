@@ -15,13 +15,17 @@ services:
       - RABBITMQ_USER=admin
       - RABBITMQ_PASSWORD=security_pass
       - RABBITMQ_VHOST=/
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=events_demo
     networks:
       - app_network
     depends_on:
       - rabbitmq
+      - mongodb
     restart: unless-stopped
 
-    # JRabbitMQ
+  # RabbitMQ
   rabbitmq:
     image: rabbitmq:3.13.2-management
     container_name: rabbitmq
@@ -87,12 +91,26 @@ services:
     depends_on:
       - rabbitmq
 
+  # MongoDB
+  mongodb:
+    image: mongo:7.0.5
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_DATABASE=events_demo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app_network
+    restart: unless-stopped
+
 volumes:
   rabbitmq_data:
   prometheus_data:
   grafana_data:
+  mongodb_data:
 
 networks:
   app_network:
     driver: bridge
-

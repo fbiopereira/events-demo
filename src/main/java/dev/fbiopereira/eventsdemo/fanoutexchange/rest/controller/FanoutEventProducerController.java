@@ -1,7 +1,7 @@
 package dev.fbiopereira.eventsdemo.fanoutexchange.rest.controller;
 
 import dev.fbiopereira.eventsdemo.fanoutexchange.model.CloudEventRequest;
-import dev.fbiopereira.eventsdemo.fanoutexchange.producer.FanoutEventProducer;
+import dev.fbiopereira.eventsdemo.fanoutexchange.service.FanoutMessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,17 +24,18 @@ import java.util.Map;
 @Tag(name = "Messages", description = "Operações para enviar mensagens para o RabbitMQ")
 public class FanoutEventProducerController {
 
-    private final FanoutEventProducer eventProducer;
+    private final FanoutMessageService fanoutMessageService;
 
     @Autowired
-    public FanoutEventProducerController(FanoutEventProducer eventProducer) {
-        this.eventProducer = eventProducer;
+    public FanoutEventProducerController(FanoutMessageService fanoutMessageService) {
+        this.fanoutMessageService = fanoutMessageService;
     }
 
     @PostMapping("/publish")
     @Operation(
             summary = "Publicar CloudEvent em uma exchange fanout",
-            description = "Publica uma mensagem no formato CloudEvents 1.0 em uma exchange fanout existente"
+            description = "Publica uma mensagem no formato CloudEvents 1.0 em uma exchange fanout existente. " +
+                         "A mensagem será validada contra o esquema definido para a exchange antes da publicação."
     )
     @ApiResponses({
             @ApiResponse(
@@ -42,29 +43,14 @@ public class FanoutEventProducerController {
                     description = "Mensagem publicada com sucesso",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class))
             ),
-            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
+            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos ou validação de esquema falhou"),
+            @ApiResponse(responseCode = "404", description = "Exchange não encontrada"),
             @ApiResponse(responseCode = "500", description = "Erro ao publicar a mensagem")
     })
     public ResponseEntity<?> publishCloudEvent(@RequestBody CloudEventRequest request) {
         try {
-            // Validação dos campos obrigatórios
-            if (request.getExchangeName() == null || request.getExchangeName().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Nome da exchange não pode ser vazio");
-            }
-            if (request.getEventType() == null || request.getEventType().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Tipo do evento não pode ser vazio");
-            }
-            if (request.getPayload() == null) {
-                return ResponseEntity.badRequest().body("Payload não pode ser nulo");
-            }
-
-            // Publicar o evento usando o producer
-            String eventId = eventProducer.publishEvent(
-                    request.getExchangeName(),
-                    request.getEventType(),
-                    request.getPayload(),
-                    request.getSubject()
-            );
+            // Usar o service para validar e publicar a mensagem
+            String eventId = fanoutMessageService.validateAndPublishMessage(request);
 
             // Retorna o ID do evento gerado para rastreabilidade
             Map<String, String> response = new HashMap<>();
@@ -72,11 +58,12 @@ public class FanoutEventProducerController {
             response.put("message", "CloudEvent publicado com sucesso na exchange '" + request.getExchangeName() + "'");
 
             return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Erro de validação: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao publicar mensagem: " + e.getMessage());
         }
     }
-
 }
