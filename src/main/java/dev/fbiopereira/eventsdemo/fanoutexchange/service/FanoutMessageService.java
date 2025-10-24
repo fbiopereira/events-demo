@@ -38,7 +38,7 @@ public class FanoutMessageService {
     /**
      * Valida e publica uma mensagem CloudEvent na exchange fanout especificada
      */
-    public String validateAndPublishMessage(CloudEventRequest request) {
+    public String validateAndPublishMessage(CloudEventRequest request) throws Exception {
         // Validação básica dos campos obrigatórios
         validateBasicFields(request);
 

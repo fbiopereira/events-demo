@@ -28,22 +28,20 @@ public class ExchangeFanoutEntity {
     @Field("created_at")
     private LocalDateTime createdAt;
 
-    @Field("request_timestamp")
-    private LocalDateTime requestTimestamp;
 
     // Constructors
     public ExchangeFanoutEntity() {
     }
 
     public ExchangeFanoutEntity(String id, String exchangeName, boolean durable, boolean autoDelete,
-                          CloudEventSchema cloudEventSchema, LocalDateTime requestTimestamp) {
+                          CloudEventSchema cloudEventSchema) {
         this();
         this.id = id;
         this.exchangeName = exchangeName;
         this.durable = durable;
         this.autoDelete = autoDelete;
         this.cloudEventSchema = cloudEventSchema;
-        this.requestTimestamp = requestTimestamp;
+
     }
 
     // Getters and Setters
@@ -94,14 +92,5 @@ public class ExchangeFanoutEntity {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-
-    public LocalDateTime getRequestTimestamp() {
-        return requestTimestamp;
-    }
-
-    public void setRequestTimestamp(LocalDateTime requestTimestamp) {
-        this.requestTimestamp = requestTimestamp;
-    }
-
 
 }

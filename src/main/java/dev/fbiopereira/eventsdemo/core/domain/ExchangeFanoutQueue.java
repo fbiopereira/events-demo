@@ -1,40 +1,33 @@
 package dev.fbiopereira.eventsdemo.core.domain;
 
-import dev.fbiopereira.eventsdemo.fanoutexchange.model.CloudEventSchema;
-
-
 import java.time.LocalDateTime;
 
-public class ExchangeFanout {
-
+public class ExchangeFanoutQueue {
 
     private String id;
-
+    private String queueName;
     private String exchangeName;
-
-    private boolean durable;
-
-    private boolean autoDelete;
-
-    private CloudEventSchema cloudEventSchema;
-
+    private boolean durable = true;
+    private boolean autoDelete = false;
+    private boolean exclusive = false;
     private LocalDateTime createdAt;
 
     // Constructors
-    public ExchangeFanout() {
+
+    public ExchangeFanoutQueue() {
         this.createdAt = LocalDateTime.now();
     }
 
-    public ExchangeFanout(String id, String exchangeName, boolean durable, boolean autoDelete,
-                                  CloudEventSchema cloudEventSchema) {
+    public ExchangeFanoutQueue(String id, String queueName, String exchangeName, boolean durable, boolean autoDelete, boolean exclusive) {
         this();
         this.id = id;
+        this.queueName = queueName;
         this.exchangeName = exchangeName;
         this.durable = durable;
         this.autoDelete = autoDelete;
-        this.cloudEventSchema = cloudEventSchema;
-
+        this.exclusive = exclusive;
     }
+
 
     // Getters and Setters
     public String getId() {
@@ -43,6 +36,14 @@ public class ExchangeFanout {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getQueueName() {
+        return queueName;
+    }
+
+    public void setQueueName(String queueName) {
+        this.queueName = queueName;
     }
 
     public String getExchangeName() {
@@ -69,12 +70,12 @@ public class ExchangeFanout {
         this.autoDelete = autoDelete;
     }
 
-    public CloudEventSchema getCloudEventSchema() {
-        return cloudEventSchema;
+    public boolean isExclusive() {
+        return exclusive;
     }
 
-    public void setCloudEventSchema(CloudEventSchema cloudEventSchema) {
-        this.cloudEventSchema = cloudEventSchema;
+    public void setExclusive(boolean exclusive) {
+        this.exclusive = exclusive;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -84,6 +85,4 @@ public class ExchangeFanout {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-
-
 }
