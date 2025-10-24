@@ -28,6 +28,6 @@ public class CreateExchangeFanoutImpl implements CreateExchangeFanout {
 
         var exchangeFanoutEntity = exchangeFanoutMapper.toExchangeFanoutEntity(exchangeFanout);
         exchangeFanoutRepository.save(exchangeFanoutEntity);
-        exchangeFanoutRabbit.create(exchangeFanout);
+        exchangeFanoutRabbit.createFanout(exchangeFanout);
     }
 }
