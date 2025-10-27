@@ -4,12 +4,12 @@ import dev.fbiopereira.eventsdemo.core.dataprovider.CreateExchangeFanoutQueue;
 import dev.fbiopereira.eventsdemo.core.domain.ExchangeFanoutQueue;
 import dev.fbiopereira.eventsdemo.core.usecase.CreateExchangeFanoutQueueUseCase;
 
-public class CreateExchangeFanoutQueueUseCaseimpl implements CreateExchangeFanoutQueueUseCase {
+public class CreateExchangeFanoutQueueUseCaseImpl implements CreateExchangeFanoutQueueUseCase {
 
 
     private final CreateExchangeFanoutQueue createExchangeFanoutQueue;
 
-    public CreateExchangeFanoutQueueUseCaseimpl(CreateExchangeFanoutQueue createExchangeFanoutQueue) {
+    public CreateExchangeFanoutQueueUseCaseImpl(CreateExchangeFanoutQueue createExchangeFanoutQueue) {
         this.createExchangeFanoutQueue = createExchangeFanoutQueue;
     }
 
