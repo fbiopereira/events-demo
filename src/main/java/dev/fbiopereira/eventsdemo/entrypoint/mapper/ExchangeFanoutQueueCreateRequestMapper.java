@@ -11,6 +11,6 @@ public interface ExchangeFanoutQueueCreateRequestMapper {
     @Mapping(target = "id", ignore = true)
     ExchangeFanoutQueue toExchangeFanoutQueue(ExchangeFanoutQueueCreateRequest exchangeFanoutQueueCreateRequest);
 
-    ExchangeFanoutQueueCreateRequest toExchangeFanoutQueueCreateRequest(ExchangeFanoutQueue exchangeFanoutQueue);
+
 
 }

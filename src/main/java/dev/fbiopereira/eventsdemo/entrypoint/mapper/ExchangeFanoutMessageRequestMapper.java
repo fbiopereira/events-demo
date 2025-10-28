@@ -9,8 +9,9 @@ import org.mapstruct.Mapping;
 public interface ExchangeFanoutMessageRequestMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     ExchangeFanoutMessage toExchangeFanoutMessage(ExchangeFanoutMessageRequest exchangeFanoutMessageRequest);
 
-    ExchangeFanoutMessageRequest toExchangeFanoutMessageRequest(ExchangeFanoutMessage exchangeFanoutMessage);
+
 
 }

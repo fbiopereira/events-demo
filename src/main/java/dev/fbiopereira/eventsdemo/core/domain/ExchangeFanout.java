@@ -1,8 +1,5 @@
 package dev.fbiopereira.eventsdemo.core.domain;
 
-import dev.fbiopereira.eventsdemo.fanoutexchange.model.CloudEventSchema;
-
-
 import java.time.LocalDateTime;
 
 public class ExchangeFanout {
@@ -16,7 +13,7 @@ public class ExchangeFanout {
 
     private boolean autoDelete;
 
-    private CloudEventSchema cloudEventSchema;
+    private String cloudEventSchema;
 
     private LocalDateTime createdAt;
 
@@ -26,7 +23,7 @@ public class ExchangeFanout {
     }
 
     public ExchangeFanout(String id, String exchangeName, boolean durable, boolean autoDelete,
-                                  CloudEventSchema cloudEventSchema) {
+                                  String cloudEventSchema) {
         this();
         this.id = id;
         this.exchangeName = exchangeName;
@@ -69,11 +66,11 @@ public class ExchangeFanout {
         this.autoDelete = autoDelete;
     }
 
-    public CloudEventSchema getCloudEventSchema() {
+    public String getCloudEventSchema() {
         return cloudEventSchema;
     }
 
-    public void setCloudEventSchema(CloudEventSchema cloudEventSchema) {
+    public void setCloudEventSchema(String cloudEventSchema) {
         this.cloudEventSchema = cloudEventSchema;
     }
 

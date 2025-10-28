@@ -1,11 +1,7 @@
 package dev.fbiopereira.eventsdemo.entrypoint.request;
 
-import dev.fbiopereira.eventsdemo.fanoutexchange.model.CloudEventSchema;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class ExchangeFanoutMessageRequest {
 

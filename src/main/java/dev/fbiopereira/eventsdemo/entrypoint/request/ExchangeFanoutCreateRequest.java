@@ -1,6 +1,6 @@
 package dev.fbiopereira.eventsdemo.entrypoint.request;
 
-import dev.fbiopereira.eventsdemo.fanoutexchange.model.CloudEventSchema;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -34,7 +34,7 @@ public class ExchangeFanoutCreateRequest {
                     """)
     @Valid
     @NotNull
-    private CloudEventSchema cloudEventSchema;
+    private String cloudEventSchema;
 
     // Getters e setters
     public String getExchangeName() {
@@ -61,11 +61,11 @@ public class ExchangeFanoutCreateRequest {
         this.autoDelete = autoDelete;
     }
 
-    public CloudEventSchema getCloudEventSchema() {
+    public String getCloudEventSchema() {
         return cloudEventSchema;
     }
 
-    public void setCloudEventSchema(CloudEventSchema cloudEventSchema) {
+    public void setCloudEventSchema(String cloudEventSchema) {
         this.cloudEventSchema = cloudEventSchema;
     }
 

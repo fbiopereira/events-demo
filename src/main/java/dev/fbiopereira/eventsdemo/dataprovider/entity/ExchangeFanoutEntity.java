@@ -1,6 +1,5 @@
 package dev.fbiopereira.eventsdemo.dataprovider.entity;
 
-import dev.fbiopereira.eventsdemo.fanoutexchange.model.CloudEventSchema;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.annotation.Id;
@@ -23,7 +22,7 @@ public class ExchangeFanoutEntity {
     private boolean autoDelete;
 
     @Field("cloudevent_schema")
-    private CloudEventSchema cloudEventSchema;
+    private String cloudEventSchema;
 
     @Field("created_at")
     private LocalDateTime createdAt;
@@ -34,7 +33,7 @@ public class ExchangeFanoutEntity {
     }
 
     public ExchangeFanoutEntity(String id, String exchangeName, boolean durable, boolean autoDelete,
-                          CloudEventSchema cloudEventSchema) {
+                          String cloudEventSchema) {
         this();
         this.id = id;
         this.exchangeName = exchangeName;
@@ -77,11 +76,11 @@ public class ExchangeFanoutEntity {
         this.autoDelete = autoDelete;
     }
 
-    public CloudEventSchema getCloudEventSchema() {
+    public String getCloudEventSchema() {
         return cloudEventSchema;
     }
 
-    public void setCloudEventSchema(CloudEventSchema cloudEventSchema) {
+    public void setCloudEventSchema(String cloudEventSchema) {
         this.cloudEventSchema = cloudEventSchema;
     }
 
