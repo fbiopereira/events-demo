@@ -1,0 +1,14 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'spring-app'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['host.docker.internal:8585']
+
+  - job_name: 'rabbitmq'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['rabbitmq-exporter:9419']

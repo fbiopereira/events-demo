@@ -1,0 +1,116 @@
+services:
+
+  # Java Spring Boot
+  events-demo-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: events-demo
+    ports:
+      - "8585:8585"
+    environment:
+      - SERVER_PORT=8585
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=admin
+      - RABBITMQ_PASSWORD=security_pass
+      - RABBITMQ_VHOST=/
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=events_demo
+    networks:
+      - app_network
+    depends_on:
+      - rabbitmq
+      - mongodb
+    restart: unless-stopped
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3.13.2-management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=security_pass
+      - RABBITMQ_DEFAULT_VHOST=/
+    ports:
+      - "5672:5672"   # Porta padrão do RabbitMQ
+      - "15672:15672" # Porta da interface de monitoração
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - ./config-files/rabbitmq_plugins:/etc/rabbitmq/enabled_plugins
+    restart: unless-stopped
+    networks:
+      - app_network
+
+  # Prometheus para métricas
+  prometheus:
+    image: prom/prometheus:v2.49.1
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config-files/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - app_network
+
+  # Grafana para visualização
+  grafana:
+    image: grafana/grafana:10.3.3
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - app_network
+    depends_on:
+      - prometheus
+
+  # RabbitMQ Exporter para o Prometheus
+  rabbitmq-exporter:
+    image: kbudde/rabbitmq-exporter:1.0.0
+    container_name: rabbitmq-exporter
+    ports:
+      - "9419:9419"
+    environment:
+      - RABBIT_URL=http://rabbitmq:15672
+      - RABBIT_USER=admin
+      - RABBIT_PASSWORD=security_pass
+      - PUBLISH_PORT=9419
+      - OUTPUT_FORMAT=prometheus
+    networks:
+      - app_network
+    depends_on:
+      - rabbitmq
+
+  # MongoDB
+  mongodb:
+    image: mongo:7.0.5
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_DATABASE=events_demo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app_network
+    restart: unless-stopped
+
+volumes:
+  rabbitmq_data:
+  prometheus_data:
+  grafana_data:
+  mongodb_data:
+
+networks:
+  app_network:
+    driver: bridge
