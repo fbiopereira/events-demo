@@ -51,8 +51,8 @@ public class RabbitProducerImpl implements RabbitProducer {
         // Cria a mensagem do RabbitMQ
         Message message = new Message(serializedEvent, properties);
 
-        // Publica na exchange (routing key é ignorada para fanout exchanges)
-        rabbitTemplate.send(exchangeFanoutMessage.getExchangeName(), "", message);
+        // Publica na exchange
+        rabbitTemplate.send(exchangeFanoutMessage.getExchangeName(), exchangeFanoutMessage.getRoutingKey(), message);
 
     }
 
